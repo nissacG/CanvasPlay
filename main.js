@@ -5,17 +5,21 @@ canvas.height = height
 canvas.width = width
 var c = canvas.getContext('2d')
 
-function Circle(x, y, dx, dy, radius) {
+colorArr = ['#34495e', '#bdc3c7', '#c23616', '#e1b12c' ]
+
+function Circle(x, y, dx, dy, radius, fill) {
   this.x = x
   this.y = y
   this.dx = dx
   this.dy = dy
   this.radius = radius
+  this.fill = fill
   this.draw = function () {
     c.beginPath()
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
-    c.strokeStyle = 'hotpink'
-    c.lineWidth = '2'
+    c.fillStyle = fill
+    c.fill()
+    c.lineWidth = '0.5'
     c.stroke()
   }
   this.update = function () {
@@ -31,14 +35,16 @@ function Circle(x, y, dx, dy, radius) {
   }
 }
 
+
 circleArr = []
 for (var i = 0; i < 200; i++) {
-  var r = 30
+  var r = Math.random() * 30 + 5
   var x = Math.random() * (width - r * 2) + r
   var y = Math.random() * (height - r * 2) + r
-  var dx = (Math.random() - 0.5) * 3
-  var dy = (Math.random() - 0.5) * 3
-  circleArr.push(new Circle(x, y, dx, dy, r))
+  var dx = (Math.random() - 0.5) * 2
+  var dy = (Math.random() - 0.5) * 2
+  var fill = colorArr[Math.floor(Math.random() * colorArr.length)]
+  circleArr.push(new Circle(x, y, dx, dy, r, fill))
 }
 
 function animateCircle() {

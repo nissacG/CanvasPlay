@@ -5,7 +5,29 @@ canvas.height = height
 canvas.width = width
 var c = canvas.getContext('2d')
 
-colorArr = ['#34495e', '#bdc3c7', '#c23616', '#e1b12c' ]
+colorArr = ['#34495e', '#bdc3c7', '#c23616', '#e1b12c']
+
+var circleAmount = 300
+var maxRadius = 50
+var mouseMargin = 50
+var mouse = {
+  x: undefined,
+  y: undefined
+}
+
+window.addEventListener('mousemove', function (e) {
+  mouse.x = e.x
+  mouse.y = e.y
+})
+
+window.addEventListener('resize', function () {
+  height = window.innerHeight
+  width = window.innerWidth
+  canvas.height = height
+  canvas.width = width
+
+  init()
+})
 
 function Circle(x, y, dx, dy, radius, fill) {
   this.x = x
@@ -13,6 +35,7 @@ function Circle(x, y, dx, dy, radius, fill) {
   this.dx = dx
   this.dy = dy
   this.radius = radius
+  this.minRadius = radius
   this.fill = fill
   this.draw = function () {
     c.beginPath()
@@ -31,20 +54,33 @@ function Circle(x, y, dx, dy, radius, fill) {
     }
     this.x += this.dx
     this.y += this.dy
+
+    if (this.x - mouse.x < mouseMargin && this.x - mouse.x > -mouseMargin && this.y - mouse.y < mouseMargin && this.y - mouse.y > -mouseMargin) {
+      if (this.radius < maxRadius) {
+        this.radius += 1
+      }
+    } else if (this.radius > this.minRadius) {
+      this.radius -= 1
+    }
+
     this.draw()
   }
 }
 
 
-circleArr = []
-for (var i = 0; i < 200; i++) {
-  var r = Math.random() * 30 + 5
-  var x = Math.random() * (width - r * 2) + r
-  var y = Math.random() * (height - r * 2) + r
-  var dx = (Math.random() - 0.5) * 2
-  var dy = (Math.random() - 0.5) * 2
-  var fill = colorArr[Math.floor(Math.random() * colorArr.length)]
-  circleArr.push(new Circle(x, y, dx, dy, r, fill))
+var circleArr = []
+
+function init() {
+  circleArr = []
+  for (var i = 0; i < circleAmount; i++) {
+    var r = Math.random() * 15 + 2
+    var x = Math.random() * (width - r * 2) + r
+    var y = Math.random() * (height - r * 2) + r
+    var dx = (Math.random() - 0.5) * 2
+    var dy = (Math.random() - 0.5) * 2
+    var fill = colorArr[Math.floor(Math.random() * colorArr.length)]
+    circleArr.push(new Circle(x, y, dx, dy, r, fill))
+  }
 }
 
 function animateCircle() {
@@ -55,3 +91,5 @@ function animateCircle() {
   }
 }
 animateCircle()
+
+init()
